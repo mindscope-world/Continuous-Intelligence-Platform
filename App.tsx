@@ -10,6 +10,7 @@ import HelpView from './components/HelpView';
 import EnterpriseView from './components/EnterpriseView';
 import GeminiChat from './components/GeminiChat';
 import NotificationPanel from './components/NotificationPanel';
+import ShareModal from './components/ShareModal';
 import { Menu, Share2, Bell, Search, Copy, Check } from 'lucide-react';
 import { ViewState, NotificationItem } from './types';
 
@@ -49,6 +50,7 @@ export default function App() {
   const [currentView, setCurrentView] = useState<ViewState>('dashboard');
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [showShareToast, setShowShareToast] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   
   // Notification States
   const [showNotifications, setShowNotifications] = useState(false);
@@ -69,12 +71,6 @@ export default function App() {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
-  const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setShowShareToast(true);
-    setTimeout(() => setShowShareToast(false), 2000);
-  };
-
   const handleNotificationClick = (notification: NotificationItem) => {
     // Mark as read
     const updatedNotifications = notifications.map(n => 
@@ -85,6 +81,18 @@ export default function App() {
     // Open panel
     setSelectedNotification(notification);
     setShowNotifications(false);
+  };
+
+  const handleMarkAsUnread = (id: string) => {
+    setNotifications(prev => prev.map(n => 
+      n.id === id ? { ...n, read: false } : n
+    ));
+    setSelectedNotification(null);
+  };
+
+  const handleArchiveNotification = (id: string) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+    setSelectedNotification(null);
   };
 
   const formattedDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -215,17 +223,12 @@ export default function App() {
               {/* Share Button */}
               <div className="relative">
                   <button 
-                    onClick={handleShare}
+                    onClick={() => setIsShareModalOpen(true)}
                     className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full flex items-center justify-center"
                     title="Share Dashboard"
                   >
-                     {showShareToast ? <Check size={18} className="text-green-500" /> : <Share2 size={18} />}
+                     <Share2 size={18} />
                   </button>
-                  {showShareToast && (
-                      <div className="absolute top-full right-0 mt-2 px-3 py-1 bg-zinc-900 dark:bg-white text-white dark:text-black text-xs font-bold rounded shadow-lg whitespace-nowrap animate-in fade-in slide-in-from-top-1 z-50">
-                         Link Copied!
-                      </div>
-                  )}
               </div>
            </div>
         </header>
@@ -239,6 +242,14 @@ export default function App() {
         isOpen={!!selectedNotification} 
         onClose={() => setSelectedNotification(null)}
         notification={selectedNotification}
+        onMarkUnread={handleMarkAsUnread}
+        onArchive={handleArchiveNotification}
+      />
+
+      <ShareModal 
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        pageTitle={getPageTitle()}
       />
       
       {/* Mobile Menu Overlay */}

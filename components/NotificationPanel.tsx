@@ -1,14 +1,22 @@
 import React from 'react';
-import { X, Bell, Calendar, CheckCircle2, AlertTriangle, Info, AlertCircle } from 'lucide-react';
+import { X, Bell, Calendar, CheckCircle2, AlertTriangle, Info, AlertCircle, Archive, EyeOff } from 'lucide-react';
 import { NotificationItem } from '../types';
 
 interface NotificationPanelProps {
   isOpen: boolean;
   onClose: () => void;
   notification: NotificationItem | null;
+  onMarkUnread: (id: string) => void;
+  onArchive: (id: string) => void;
 }
 
-const NotificationPanel: React.FC<NotificationPanelProps> = ({ isOpen, onClose, notification }) => {
+const NotificationPanel: React.FC<NotificationPanelProps> = ({ 
+  isOpen, 
+  onClose, 
+  notification,
+  onMarkUnread,
+  onArchive
+}) => {
   if (!isOpen || !notification) return null;
 
   const getIcon = (type: string) => {
@@ -83,11 +91,17 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({ isOpen, onClose, 
            <div className="mt-8 pt-6 border-t border-zinc-200 dark:border-zinc-800">
               <h4 className="text-sm font-semibold text-zinc-900 dark:text-white mb-3">Related Actions</h4>
               <div className="flex flex-col gap-2">
-                 <button className="w-full py-2.5 px-4 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg text-sm font-medium transition-colors text-left">
-                    Mark as Unread
+                 <button 
+                    onClick={() => onMarkUnread(notification.id)}
+                    className="w-full py-2.5 px-4 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg text-sm font-medium transition-colors text-left flex items-center gap-2"
+                 >
+                    <EyeOff size={16} /> Mark as Unread
                  </button>
-                 <button className="w-full py-2.5 px-4 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg text-sm font-medium transition-colors text-left">
-                    Archive Notification
+                 <button 
+                    onClick={() => onArchive(notification.id)}
+                    className="w-full py-2.5 px-4 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg text-sm font-medium transition-colors text-left flex items-center gap-2"
+                 >
+                    <Archive size={16} /> Archive Notification
                  </button>
               </div>
            </div>
