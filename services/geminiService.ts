@@ -1,20 +1,19 @@
 import { GoogleGenAI } from "@google/genai";
 
-// Initialize Gemini
-let ai: GoogleGenAI | null = null;
-if (process.env.API_KEY) {
-  ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-}
-
 export const sendMessageToGemini = async (
   message: string,
   history: { role: string; parts: { text: string }[] }[]
 ): Promise<string> => {
-  if (!ai) {
-    return "MindVerse API Key is missing. Please configure it to access GTM Intelligence.";
+  // Retrieve API Key from Local Storage first, then fallback to Env
+  const apiKey = localStorage.getItem('mindverse_api_key') || process.env.API_KEY;
+
+  if (!apiKey) {
+    return "MindVerse API Key is missing. Please go to Settings > API Configuration to configure your Google Gemini API Key.";
   }
 
   try {
+    const ai = new GoogleGenAI({ apiKey });
+    
     const chat = ai.chats.create({
       model: 'gemini-2.5-flash',
       config: {
@@ -44,8 +43,13 @@ export const sendMessageToGemini = async (
 
     const result = await chat.sendMessage({ message });
     return result.text || "";
-  } catch (error) {
+  } catch (error: any) {
     console.error("Gemini API Error:", error);
+    
+    if (error.message?.includes('API_KEY_INVALID') || error.status === 400) {
+       return "The provided API Key is invalid. Please check your settings and try again.";
+    }
+    
     return "I'm having trouble connecting to the MindVerse intelligence network right now. Please try again later.";
   }
 };
