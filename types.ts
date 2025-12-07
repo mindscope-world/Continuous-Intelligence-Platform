@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type ViewState = 'dashboard' | 'track' | 'analyze' | 'experiment' | 'data' | 'settings' | 'help';
+export type ViewState = 'dashboard' | 'track' | 'analyze' | 'experiment' | 'data' | 'settings' | 'help' | 'enterprise';
 
 export interface Recommendation {
   id: string;

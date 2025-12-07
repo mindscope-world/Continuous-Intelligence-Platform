@@ -7,6 +7,7 @@ import ExperimentView from './components/ExperimentView';
 import DataSourcesView from './components/DataSourcesView';
 import SettingsView from './components/SettingsView';
 import HelpView from './components/HelpView';
+import EnterpriseView from './components/EnterpriseView';
 import GeminiChat from './components/GeminiChat';
 import { Menu, Share2, Bell, Search } from 'lucide-react';
 import { ViewState } from './types';
@@ -47,6 +48,8 @@ export default function App() {
         return <SettingsView theme={theme} onToggleTheme={toggleTheme} />;
       case 'help':
         return <HelpView />;
+      case 'enterprise':
+        return <EnterpriseView />;
       default:
         return <Dashboard />;
     }
@@ -61,6 +64,7 @@ export default function App() {
       case 'data': return 'Data Sources';
       case 'settings': return 'Settings';
       case 'help': return 'Help & Center';
+      case 'enterprise': return 'Plans & Billing';
       default: return 'Command Center';
     }
   };

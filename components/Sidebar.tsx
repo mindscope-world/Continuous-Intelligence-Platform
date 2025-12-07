@@ -116,7 +116,10 @@ const Sidebar: React.FC<SidebarProps> = ({ onOpenAI, activeView, onNavigate }) =
             <h4 className="text-zinc-900 dark:text-white font-semibold text-sm">Enterprise</h4>
          </div>
          <p className="text-xs text-zinc-500 mb-3 leading-relaxed">Unlock advanced GTM simulations and unlimited data connectors.</p>
-         <button className="w-full py-2 bg-zinc-900 dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black text-xs font-bold rounded-lg transition-colors">
+         <button 
+            onClick={() => onNavigate('enterprise')}
+            className="w-full py-2 bg-zinc-900 dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black text-xs font-bold rounded-lg transition-colors"
+         >
             Upgrade Plan
          </button>
       </div>
