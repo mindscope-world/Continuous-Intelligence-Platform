@@ -11,6 +11,7 @@ import EnterpriseView from './components/EnterpriseView';
 import GeminiChat from './components/GeminiChat';
 import NotificationPanel from './components/NotificationPanel';
 import ShareModal from './components/ShareModal';
+import LandingPage from './components/LandingPage';
 import { Menu, Share2, Bell, Search, Copy, Check, Archive, Inbox } from 'lucide-react';
 import { ViewState, NotificationItem } from './types';
 
@@ -47,7 +48,7 @@ const INITIAL_NOTIFICATIONS: NotificationItem[] = [
 export default function App() {
   const [isAiOpen, setIsAiOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [currentView, setCurrentView] = useState<ViewState>('dashboard');
+  const [currentView, setCurrentView] = useState<ViewState>('landing');
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [showShareToast, setShowShareToast] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
@@ -111,6 +112,11 @@ export default function App() {
 
   const formattedDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
   const unreadCount = notifications.filter(n => !n.read).length;
+
+  // Render Landing Page full screen if selected
+  if (currentView === 'landing') {
+    return <LandingPage onEnterApp={() => setCurrentView('dashboard')} />;
+  }
 
   const renderContent = () => {
     switch (currentView) {

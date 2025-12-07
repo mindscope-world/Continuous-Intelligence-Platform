@@ -23,7 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onOpenAI, activeView, onNavigate }) =
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 bg-white dark:bg-[#09090b] border-r border-zinc-200 dark:border-zinc-900 flex flex-col p-4 z-40 hidden md:flex transition-colors duration-300">
       {/* Logo */}
-      <div className="flex items-center gap-2 px-2 mb-8 cursor-pointer" onClick={() => onNavigate('dashboard')}>
+      <div className="flex items-center gap-2 px-2 mb-8 cursor-pointer" onClick={() => onNavigate('landing')}>
         <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
              <Sparkles className="text-white w-5 h-5" />
         </div>
