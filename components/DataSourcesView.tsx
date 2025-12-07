@@ -37,6 +37,7 @@ const DataSourcesView: React.FC = () => {
   const [sources, setSources] = useState<DataSource[]>(INITIAL_SOURCES);
   const [isSyncing, setIsSyncing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeFilter, setActiveFilter] = useState<'All' | 'Connected' | 'Disconnected'>('All');
 
   const handleToggleConnection = (id: string) => {
     setSources(prev => prev.map(source => {
@@ -61,10 +62,16 @@ const DataSourcesView: React.FC = () => {
     }, 2000);
   };
 
-  const filteredSources = sources.filter(s => 
-    s.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    s.category.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredSources = sources.filter(s => {
+    const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          s.category.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    let matchesFilter = true;
+    if (activeFilter === 'Connected') matchesFilter = s.status === 'Connected';
+    if (activeFilter === 'Disconnected') matchesFilter = s.status !== 'Connected'; // Includes 'Error' status as disconnected logic
+    
+    return matchesSearch && matchesFilter;
+  });
 
   return (
     <main className="flex-1 p-8 overflow-y-auto animate-in fade-in duration-300">
@@ -117,7 +124,15 @@ const DataSourcesView: React.FC = () => {
          </div>
          <div className="flex gap-2">
             {['All', 'Connected', 'Disconnected'].map((filter) => (
-               <button key={filter} className="px-3 py-1.5 text-xs font-medium text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors">
+               <button 
+                 key={filter} 
+                 onClick={() => setActiveFilter(filter as any)}
+                 className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+                   activeFilter === filter 
+                     ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-sm' 
+                     : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                 }`}
+               >
                   {filter}
                </button>
             ))}
