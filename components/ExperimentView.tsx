@@ -77,10 +77,10 @@ const ExperimentView: React.FC = () => {
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2 flex items-center gap-2">
             Experiment
           </h1>
-          <p className="text-zinc-400 text-sm">
+          <p className="text-zinc-500 dark:text-zinc-400 text-sm">
             Simulate "What-If" scenarios to forecast business impact before execution.
           </p>
         </div>
@@ -94,55 +94,55 @@ const ExperimentView: React.FC = () => {
 
       {/* KPI Cards for Experiments */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-         <div className="bg-[#18181b] border border-zinc-800 rounded-xl p-4">
+         <div className="bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-zinc-800 rounded-xl p-4">
              <div className="text-zinc-500 text-xs font-medium uppercase mb-1">Active Simulations</div>
-             <div className="text-2xl font-bold text-white">{simulations.filter(s => s.status === 'Running').length}</div>
+             <div className="text-2xl font-bold text-zinc-900 dark:text-white">{simulations.filter(s => s.status === 'Running').length}</div>
          </div>
-         <div className="bg-[#18181b] border border-zinc-800 rounded-xl p-4">
+         <div className="bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-zinc-800 rounded-xl p-4">
              <div className="text-zinc-500 text-xs font-medium uppercase mb-1">Success Rate</div>
              <div className="text-2xl font-bold text-green-500">76%</div>
          </div>
-         <div className="bg-[#18181b] border border-zinc-800 rounded-xl p-4">
+         <div className="bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-zinc-800 rounded-xl p-4">
              <div className="text-zinc-500 text-xs font-medium uppercase mb-1">Avg. Confidence</div>
              <div className="text-2xl font-bold text-blue-500">82%</div>
          </div>
-         <div className="bg-[#18181b] border border-zinc-800 rounded-xl p-4">
+         <div className="bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-zinc-800 rounded-xl p-4">
              <div className="text-zinc-500 text-xs font-medium uppercase mb-1">Total Experiments</div>
-             <div className="text-2xl font-bold text-white">{simulations.length}</div>
+             <div className="text-2xl font-bold text-zinc-900 dark:text-white">{simulations.length}</div>
          </div>
       </div>
 
       {/* Simulation List */}
       <div className="grid grid-cols-1 gap-4">
          {simulations.map((sim) => (
-             <div key={sim.id} className="bg-[#18181b] border border-zinc-800 rounded-xl p-5 hover:border-zinc-700 transition-colors group">
+             <div key={sim.id} className="bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-zinc-800 rounded-xl p-5 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors group shadow-sm dark:shadow-none">
                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     
                     {/* Left: Info */}
                     <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
                              <span className={`px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wide ${
-                                 sim.status === 'Running' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
-                                 sim.status === 'Completed' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                                 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20'
+                                 sim.status === 'Running' ? 'bg-purple-100 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-500/20' :
+                                 sim.status === 'Completed' ? 'bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-500/20' :
+                                 'bg-zinc-100 dark:bg-zinc-500/10 text-zinc-500 dark:text-zinc-400 border-zinc-200 dark:border-zinc-500/20'
                              }`}>
                                  {sim.status}
                              </span>
                              <span className="text-xs text-zinc-500">ID: SIM-{sim.id}</span>
                         </div>
-                        <h3 className="text-white font-semibold text-lg">{sim.hypothesis}</h3>
+                        <h3 className="text-zinc-900 dark:text-white font-semibold text-lg">{sim.hypothesis}</h3>
                         <div className="flex items-center gap-2 mt-2">
-                            <img src={sim.ownerAvatar} alt={sim.ownerName} className="w-5 h-5 rounded-full border border-zinc-700" />
-                            <span className="text-xs text-zinc-400">Created by {sim.ownerName}</span>
+                            <img src={sim.ownerAvatar} alt={sim.ownerName} className="w-5 h-5 rounded-full border border-zinc-200 dark:border-zinc-700" />
+                            <span className="text-xs text-zinc-500 dark:text-zinc-400">Created by {sim.ownerName}</span>
                         </div>
                     </div>
 
                     {/* Middle: Metrics */}
                     {sim.status !== 'Draft' && (
-                        <div className="flex items-center gap-8 px-4 border-l border-zinc-800">
+                        <div className="flex items-center gap-8 px-4 border-l border-zinc-200 dark:border-zinc-800">
                            <div className="text-center">
                                 <div className="text-xs text-zinc-500 mb-1">Confidence</div>
-                                <div className="text-lg font-bold text-white">{sim.confidenceScore}%</div>
+                                <div className="text-lg font-bold text-zinc-900 dark:text-white">{sim.confidenceScore}%</div>
                            </div>
                            <div className="text-center">
                                 <div className="text-xs text-zinc-500 mb-1">Prediction</div>
@@ -157,23 +157,23 @@ const ExperimentView: React.FC = () => {
                     )}
 
                     {/* Right: Actions */}
-                    <div className="flex items-center gap-3 pl-4 md:border-l border-zinc-800">
+                    <div className="flex items-center gap-3 pl-4 md:border-l border-zinc-200 dark:border-zinc-800">
                         {sim.status === 'Running' ? (
-                            <div className="flex items-center gap-2 text-purple-400 text-sm font-medium">
-                                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                            <div className="flex items-center gap-2 text-purple-500 dark:text-purple-400 text-sm font-medium">
+                                <div className="w-2 h-2 bg-purple-500 dark:bg-purple-400 rounded-full animate-pulse"></div>
                                 Simulating...
                             </div>
                         ) : sim.status === 'Completed' ? (
                             <button 
                                 onClick={() => handleViewReport(sim)}
-                                className="px-4 py-2 bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800 rounded-lg text-sm font-medium hover:bg-zinc-800 transition-colors flex items-center gap-2"
+                                className="px-4 py-2 bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm font-medium hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors flex items-center gap-2"
                             >
                                 View Report <ArrowRight size={14} />
                             </button>
                         ) : (
                              <button 
                                 onClick={() => handleRunDraft(sim.id)}
-                                className="px-4 py-2 bg-blue-600/10 text-blue-400 border border-blue-500/20 rounded-lg text-sm font-medium hover:bg-blue-600/20 transition-colors flex items-center gap-2"
+                                className="px-4 py-2 bg-blue-50 dark:bg-blue-600/10 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/20 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-600/20 transition-colors flex items-center gap-2"
                              >
                                 <Play size={14} fill="currentColor" /> Run Now
                             </button>

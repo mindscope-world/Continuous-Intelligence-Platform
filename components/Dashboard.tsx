@@ -44,7 +44,7 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <main className="flex-1 p-8 overflow-y-auto">
+    <main className="flex-1 p-8 overflow-y-auto transition-colors duration-300">
       <NewSimulationModal 
         isOpen={showSimModal} 
         onClose={() => setShowSimModal(false)}
@@ -54,17 +54,17 @@ const Dashboard: React.FC = () => {
       {/* Welcome Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2 flex items-center gap-2">
             MindVerse Command Center
           </h1>
-          <p className="text-zinc-400 text-sm">
-            AI-Driven Insights for <span className="text-white font-medium">Q3 2025 Strategy</span>. You have <span className="text-blue-400 font-medium">2 High Impact</span> recommendations pending.
+          <p className="text-zinc-500 dark:text-zinc-400 text-sm">
+            AI-Driven Insights for <span className="text-zinc-900 dark:text-white font-medium">Q3 2025 Strategy</span>. You have <span className="text-blue-500 dark:text-blue-400 font-medium">2 High Impact</span> recommendations pending.
           </p>
         </div>
         <div className="flex gap-3">
           <button 
             onClick={() => setShowLiveView(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#18181b] border border-zinc-800 text-zinc-300 rounded-lg text-sm font-medium hover:bg-zinc-800 hover:text-white transition-colors relative"
+            className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-lg text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white transition-colors relative"
           >
             <Activity size={16} />
             <span className="absolute top-1 right-1 flex h-2 w-2">
@@ -119,19 +119,19 @@ const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         
         {/* Recommended Actions (Action Engine) */}
-        <div className="lg:col-span-2 bg-[#18181b] border border-zinc-800/60 rounded-2xl p-6 relative overflow-hidden">
+        <div className="lg:col-span-2 bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-zinc-800/60 rounded-2xl p-6 relative overflow-hidden transition-colors">
           {/* Decorative glow */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
 
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
             <div>
-                <h3 className="font-semibold text-white flex items-center gap-2">
+                <h3 className="font-semibold text-zinc-900 dark:text-white flex items-center gap-2">
                     <BrainCircuit size={18} className="text-blue-500" />
                     Action Engine
                 </h3>
                 <p className="text-xs text-zinc-500 mt-1">AI-generated recommendations to optimize GTM performance</p>
             </div>
-            <button className="px-3 py-2 bg-[#09090b] border border-zinc-800 text-zinc-300 rounded-lg text-xs font-medium flex items-center gap-2 hover:bg-zinc-800">
+            <button className="px-3 py-2 bg-zinc-50 dark:bg-[#09090b] border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-lg text-xs font-medium flex items-center gap-2 hover:bg-zinc-100 dark:hover:bg-zinc-800">
                 <Filter size={14} /> Filter
             </button>
           </div>
@@ -139,7 +139,7 @@ const Dashboard: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="text-left text-xs text-zinc-500 border-b border-zinc-800/50">
+                <tr className="text-left text-xs text-zinc-500 border-b border-zinc-200 dark:border-zinc-800/50">
                   <th className="font-medium py-3 pl-2">Recommendation</th>
                   <th className="font-medium py-3">Category</th>
                   <th className="font-medium py-3">Predicted Impact</th>
@@ -148,22 +148,22 @@ const Dashboard: React.FC = () => {
               </thead>
               <tbody className="text-sm">
                 {MOCK_RECOMMENDATIONS.map(rec => (
-                  <tr key={rec.id} className="group hover:bg-zinc-800/30 transition-colors">
+                  <tr key={rec.id} className="group hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors">
                     <td className="py-3 pl-2 max-w-xs">
                       <div className="flex items-start gap-3">
                          <div className={`mt-0.5 min-w-[6px] w-1.5 h-1.5 rounded-full ${rec.categoryColor}`} />
-                         <span className={`text-zinc-200 font-medium ${rec.status === 'Dismissed' ? 'line-through text-zinc-600' : ''}`}>{rec.action}</span>
+                         <span className={`text-zinc-700 dark:text-zinc-200 font-medium ${rec.status === 'Dismissed' ? 'line-through text-zinc-400 dark:text-zinc-600' : ''}`}>{rec.action}</span>
                       </div>
                     </td>
                     <td className="py-3">
-                      <span className="text-zinc-400 text-xs px-2 py-1 bg-zinc-800 rounded border border-zinc-700">{rec.category}</span>
+                      <span className="text-zinc-500 dark:text-zinc-400 text-xs px-2 py-1 bg-zinc-100 dark:bg-zinc-800 rounded border border-zinc-200 dark:border-zinc-700">{rec.category}</span>
                     </td>
                     <td className="py-3">
                          <span className={`text-xs font-bold ${rec.impactColor}`}>{rec.impact} Impact</span>
                     </td>
                     <td className="py-3 text-right">
                         {rec.status === 'Pending' && (
-                            <button className="text-blue-400 hover:text-white text-xs font-medium flex items-center gap-1 justify-end w-full group-hover:underline">
+                            <button className="text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-white text-xs font-medium flex items-center gap-1 justify-end w-full group-hover:underline">
                                 Execute <ArrowRight size={12} />
                             </button>
                         )}
@@ -185,10 +185,10 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Active Simulations (Experiment) */}
-      <div className="bg-[#18181b] border border-zinc-800/60 rounded-2xl p-6">
+      <div className="bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-zinc-800/60 rounded-2xl p-6 transition-colors">
          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
             <div>
-                <h3 className="font-semibold text-white flex items-center gap-2">
+                <h3 className="font-semibold text-zinc-900 dark:text-white flex items-center gap-2">
                     <TestTube2 size={18} className="text-purple-500" />
                     Active Simulations
                 </h3>
@@ -197,11 +197,11 @@ const Dashboard: React.FC = () => {
             
             <div className="flex gap-2 w-full sm:w-auto">
               <div className="relative flex-1 sm:flex-none">
-                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4" />
+                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500 w-4 h-4" />
                  <input 
                   type="text" 
                   placeholder="Search simulations..." 
-                  className="w-full sm:w-48 bg-[#09090b] text-zinc-300 text-xs rounded-lg pl-9 pr-3 py-2 border border-zinc-800 focus:outline-none focus:border-zinc-700"
+                  className="w-full sm:w-48 bg-zinc-50 dark:bg-[#09090b] text-zinc-900 dark:text-zinc-300 text-xs rounded-lg pl-9 pr-3 py-2 border border-zinc-200 dark:border-zinc-800 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-700"
                 />
               </div>
             </div>
@@ -210,7 +210,7 @@ const Dashboard: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="text-left text-xs text-zinc-500 border-b border-zinc-800/50">
+                <tr className="text-left text-xs text-zinc-500 border-b border-zinc-200 dark:border-zinc-800/50">
                   <th className="font-medium py-3 pl-2">Hypothesis</th>
                   <th className="font-medium py-3">Status</th>
                   <th className="font-medium py-3">Confidence</th>
@@ -220,35 +220,35 @@ const Dashboard: React.FC = () => {
               </thead>
               <tbody className="text-sm">
                 {simulations.map(sim => (
-                  <tr key={sim.id} className="border-b border-zinc-800/30 hover:bg-zinc-800/30 transition-colors last:border-0">
+                  <tr key={sim.id} className="border-b border-zinc-200 dark:border-zinc-800/30 hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors last:border-0">
                     <td className="py-4 pl-2">
-                       <span className="font-medium text-zinc-200">{sim.hypothesis}</span>
+                       <span className="font-medium text-zinc-700 dark:text-zinc-200">{sim.hypothesis}</span>
                     </td>
                     <td className="py-4">
                       <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${
-                        sim.status === 'Running' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
-                        sim.status === 'Completed' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                        'bg-zinc-500/10 text-zinc-400 border-zinc-500/20'
+                        sim.status === 'Running' ? 'bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-500/20' :
+                        sim.status === 'Completed' ? 'bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-500/20' :
+                        'bg-zinc-100 dark:bg-zinc-500/10 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-500/20'
                       }`}>
-                        {sim.status === 'Running' && <span className="mr-1.5 inline-block w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />}
+                        {sim.status === 'Running' && <span className="mr-1.5 inline-block w-1.5 h-1.5 rounded-full bg-purple-500 dark:bg-purple-400 animate-pulse" />}
                         {sim.status}
                       </span>
                     </td>
                     <td className="py-4 min-w-[140px] pr-6">
                       <div className="flex items-center gap-3">
-                         <div className="flex-1 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                         <div className="flex-1 h-1.5 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
                            <div className="h-full bg-blue-500 rounded-full" style={{ width: `${sim.confidenceScore}%` }}></div>
                          </div>
-                         <span className="text-xs text-zinc-400 w-8">{sim.confidenceScore}%</span>
+                         <span className="text-xs text-zinc-500 dark:text-zinc-400 w-8">{sim.confidenceScore}%</span>
                       </div>
                     </td>
-                    <td className="py-4 text-zinc-300 font-mono text-xs">
+                    <td className="py-4 text-zinc-700 dark:text-zinc-300 font-mono text-xs">
                       {sim.predictedImpact}
                     </td>
                     <td className="py-4">
                       <div className="flex items-center gap-2">
-                        <img src={sim.ownerAvatar} alt={sim.ownerName} className="w-6 h-6 rounded-full border border-zinc-700" />
-                        <span className="text-zinc-400 text-xs">{sim.ownerName}</span>
+                        <img src={sim.ownerAvatar} alt={sim.ownerName} className="w-6 h-6 rounded-full border border-zinc-200 dark:border-zinc-700" />
+                        <span className="text-zinc-500 dark:text-zinc-400 text-xs">{sim.ownerName}</span>
                       </div>
                     </td>
                   </tr>

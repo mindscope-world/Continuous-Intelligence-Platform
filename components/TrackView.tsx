@@ -42,10 +42,10 @@ const TrackView: React.FC = () => {
   return (
     <main className="flex-1 p-8 overflow-y-auto animate-in fade-in duration-300">
       <div className="flex flex-col mb-8">
-        <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2 flex items-center gap-2">
           Track (KPIs)
         </h1>
-        <p className="text-zinc-400 text-sm">
+        <p className="text-zinc-500 dark:text-zinc-400 text-sm">
           Continuous monitoring of key business drivers against Q3 Goals.
         </p>
       </div>
@@ -57,16 +57,16 @@ const TrackView: React.FC = () => {
           { label: 'New Enterprise Logos', current: '18', target: '25', percent: 72, color: 'bg-purple-500' },
           { label: 'Net Dollar Retention', current: '108%', target: '115%', percent: 93, color: 'bg-green-500' },
         ].map((goal, idx) => (
-          <div key={idx} className="bg-[#18181b] border border-zinc-800 rounded-2xl p-5">
+          <div key={idx} className="bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 shadow-sm dark:shadow-none">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium text-zinc-300">{goal.label}</span>
-              <Target size={16} className="text-zinc-500" />
+              <span className="text-sm font-medium text-zinc-600 dark:text-zinc-300">{goal.label}</span>
+              <Target size={16} className="text-zinc-400 dark:text-zinc-500" />
             </div>
             <div className="flex items-end gap-2 mb-3">
-              <span className="text-2xl font-bold text-white">{goal.current}</span>
+              <span className="text-2xl font-bold text-zinc-900 dark:text-white">{goal.current}</span>
               <span className="text-xs text-zinc-500 mb-1">/ {goal.target}</span>
             </div>
-            <div className="h-2 w-full bg-zinc-800 rounded-full overflow-hidden">
+            <div className="h-2 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
               <div 
                 className={`h-full rounded-full ${goal.color}`} 
                 style={{ width: `${goal.percent}%` }}
@@ -80,18 +80,18 @@ const TrackView: React.FC = () => {
       {/* Middle: Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* Revenue vs Target */}
-        <div className="lg:col-span-2 bg-[#18181b] border border-zinc-800 rounded-2xl p-6">
+        <div className="lg:col-span-2 bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="font-semibold text-white flex items-center gap-2">
+            <h3 className="font-semibold text-zinc-900 dark:text-white flex items-center gap-2">
               <BarChart2 size={18} className="text-zinc-400" />
               Revenue vs Target
             </h3>
             <div className="flex gap-2">
-              <div className="flex items-center gap-1.5 text-xs text-zinc-400">
+              <div className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
                 <div className="w-2 h-2 rounded-full bg-blue-500"></div> Actual
               </div>
-              <div className="flex items-center gap-1.5 text-xs text-zinc-400">
-                <div className="w-2 h-2 rounded-full bg-zinc-700"></div> Target
+              <div className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+                <div className="w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-700"></div> Target
               </div>
             </div>
           </div>
@@ -118,19 +118,19 @@ const TrackView: React.FC = () => {
                   tickFormatter={(val) => `$${val}k`}
                 />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', color: '#fff' }}
+                  contentStyle={{ backgroundColor: 'var(--tooltip-bg, #18181b)', borderColor: 'var(--tooltip-border, #27272a)', color: 'var(--tooltip-text, #fff)' }}
                   itemStyle={{ fontSize: '12px' }}
                 />
                 <Area type="monotone" dataKey="actual" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorActual)" />
-                <Area type="monotone" dataKey="target" stroke="#3f3f46" strokeDasharray="5 5" strokeWidth={2} fillOpacity={0} fill="transparent" />
+                <Area type="monotone" dataKey="target" stroke="#a1a1aa" strokeDasharray="5 5" strokeWidth={2} fillOpacity={0} fill="transparent" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Marketing Funnel */}
-        <div className="lg:col-span-1 bg-[#18181b] border border-zinc-800 rounded-2xl p-6">
-           <h3 className="font-semibold text-white flex items-center gap-2 mb-6">
+        <div className="lg:col-span-1 bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6">
+           <h3 className="font-semibold text-zinc-900 dark:text-white flex items-center gap-2 mb-6">
               <PieChart size={18} className="text-zinc-400" />
               Marketing Funnel (Q3)
            </h3>
@@ -148,7 +148,7 @@ const TrackView: React.FC = () => {
                   />
                   <Tooltip 
                     cursor={{ fill: 'transparent' }}
-                    contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', color: '#fff' }}
+                    contentStyle={{ backgroundColor: 'var(--tooltip-bg, #18181b)', borderColor: 'var(--tooltip-border, #27272a)', color: 'var(--tooltip-text, #fff)' }}
                   />
                   <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={32}>
                     {FUNNEL_DATA.map((entry, index) => (
@@ -162,16 +162,16 @@ const TrackView: React.FC = () => {
       </div>
 
       {/* Bottom: Detailed KPI Grid */}
-      <h3 className="text-lg font-bold text-white mb-4">Detailed Metrics</h3>
+      <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-4">Detailed Metrics</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {KPIS.map((kpi) => (
-          <div key={kpi.id} className="bg-[#18181b] border border-zinc-800 rounded-xl p-4 hover:border-zinc-700 transition-colors">
+          <div key={kpi.id} className="bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors shadow-sm dark:shadow-none">
             <div className="flex justify-between items-start mb-2">
                <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">{kpi.category}</span>
                <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium border ${
-                 kpi.status === 'Healthy' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                 kpi.status === 'At Risk' ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' :
-                 'bg-red-500/10 text-red-400 border-red-500/20'
+                 kpi.status === 'Healthy' ? 'bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-500/20' :
+                 kpi.status === 'At Risk' ? 'bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-200 dark:border-yellow-500/20' :
+                 'bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400 border-red-200 dark:border-red-500/20'
                }`}>
                   {kpi.status === 'Healthy' && <CheckCircle2 size={10} />}
                   {kpi.status === 'At Risk' && <Minus size={10} />}
@@ -181,14 +181,14 @@ const TrackView: React.FC = () => {
             </div>
             <div className="flex justify-between items-end">
               <div>
-                 <h4 className="text-zinc-300 font-medium text-sm mb-1">{kpi.label}</h4>
-                 <div className="text-2xl font-bold text-white">{kpi.value}</div>
+                 <h4 className="text-zinc-600 dark:text-zinc-300 font-medium text-sm mb-1">{kpi.label}</h4>
+                 <div className="text-2xl font-bold text-zinc-900 dark:text-white">{kpi.value}</div>
               </div>
               <div className="text-right">
                 <div className={`flex items-center justify-end gap-1 font-bold text-sm ${
                   kpi.trend === 'up' && kpi.status === 'Critical' ? 'text-red-500' :
                   kpi.trend === 'up' ? 'text-green-500' : 
-                  kpi.trend === 'down' && (kpi.label.includes('Cost') || kpi.label.includes('Churn')) ? 'text-green-500' :
+                  (kpi.label.includes('Cost') || kpi.label.includes('Churn')) && kpi.trend === 'down' ? 'text-green-500' :
                   kpi.trend === 'down' ? 'text-red-500' : 'text-zinc-500'
                 }`}>
                    {kpi.trend === 'up' && <TrendingUp size={14} />}
