@@ -11,7 +11,7 @@ import EnterpriseView from './components/EnterpriseView';
 import GeminiChat from './components/GeminiChat';
 import NotificationPanel from './components/NotificationPanel';
 import ShareModal from './components/ShareModal';
-import { Menu, Share2, Bell, Search, Copy, Check } from 'lucide-react';
+import { Menu, Share2, Bell, Search, Copy, Check, Archive, Inbox } from 'lucide-react';
 import { ViewState, NotificationItem } from './types';
 
 const INITIAL_NOTIFICATIONS: NotificationItem[] = [
@@ -55,7 +55,9 @@ export default function App() {
   // Notification States
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState<NotificationItem[]>(INITIAL_NOTIFICATIONS);
+  const [archivedNotifications, setArchivedNotifications] = useState<NotificationItem[]>([]);
   const [selectedNotification, setSelectedNotification] = useState<NotificationItem | null>(null);
+  const [viewingArchived, setViewingArchived] = useState(false);
 
   // Handle Theme Toggle
   useEffect(() => {
@@ -72,11 +74,13 @@ export default function App() {
   };
 
   const handleNotificationClick = (notification: NotificationItem) => {
-    // Mark as read
-    const updatedNotifications = notifications.map(n => 
-      n.id === notification.id ? { ...n, read: true } : n
-    );
-    setNotifications(updatedNotifications);
+    // If it's in the active list, mark as read
+    if (!viewingArchived) {
+      const updatedNotifications = notifications.map(n => 
+        n.id === notification.id ? { ...n, read: true } : n
+      );
+      setNotifications(updatedNotifications);
+    }
     
     // Open panel
     setSelectedNotification(notification);
@@ -84,6 +88,7 @@ export default function App() {
   };
 
   const handleMarkAsUnread = (id: string) => {
+    // Only works for active notifications
     setNotifications(prev => prev.map(n => 
       n.id === id ? { ...n, read: false } : n
     ));
@@ -91,7 +96,16 @@ export default function App() {
   };
 
   const handleArchiveNotification = (id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
+    // Find notification in active list
+    const notificationToArchive = notifications.find(n => n.id === id);
+    
+    if (notificationToArchive) {
+      // Add to archived list (mark as read implicitly)
+      setArchivedNotifications(prev => [{ ...notificationToArchive, read: true }, ...prev]);
+      // Remove from active list
+      setNotifications(prev => prev.filter(n => n.id !== id));
+    }
+    
     setSelectedNotification(null);
   };
 
@@ -181,7 +195,7 @@ export default function App() {
                    className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full flex items-center justify-center relative"
                  >
                     <Bell size={18} />
-                    {unreadCount > 0 && (
+                    {unreadCount > 0 && !viewingArchived && (
                       <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-[#09090b]"></span>
                     )}
                  </button>
@@ -189,26 +203,53 @@ export default function App() {
                  {showNotifications && (
                     <div className="absolute top-full right-0 mt-2 w-80 bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 z-50">
                         <div className="p-3 border-b border-zinc-200 dark:border-zinc-800 flex justify-between items-center bg-white dark:bg-[#18181b]">
-                            <h4 className="font-semibold text-zinc-900 dark:text-white text-xs">Notifications</h4>
-                            {unreadCount > 0 && (
+                            <div className="flex items-center gap-2">
+                              <h4 className="font-semibold text-zinc-900 dark:text-white text-xs">
+                                {viewingArchived ? 'Archived' : 'Notifications'}
+                              </h4>
+                              {viewingArchived && <span className="text-[10px] bg-zinc-100 dark:bg-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded-full">History</span>}
+                            </div>
+                            
+                            {!viewingArchived && unreadCount > 0 && (
                               <span className="text-[10px] bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded-full">{unreadCount} New</span>
                             )}
                         </div>
-                        <div className="max-h-64 overflow-y-auto bg-white dark:bg-[#18181b]">
-                            {notifications.length === 0 ? (
-                                <div className="p-4 text-center text-xs text-zinc-500">No new notifications</div>
+
+                        {/* Toggle View Button */}
+                        <div className="px-3 py-2 bg-zinc-50 dark:bg-zinc-900/50 border-b border-zinc-200 dark:border-zinc-800">
+                          <button 
+                            onClick={() => setViewingArchived(!viewingArchived)}
+                            className="w-full text-xs flex items-center justify-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors"
+                          >
+                            {viewingArchived ? (
+                              <><Inbox size={12} /> Back to Inbox</>
                             ) : (
-                                notifications.map(notification => (
+                              <><Archive size={12} /> View Archived Messages</>
+                            )}
+                          </button>
+                        </div>
+
+                        <div className="max-h-64 overflow-y-auto bg-white dark:bg-[#18181b]">
+                            {(viewingArchived ? archivedNotifications : notifications).length === 0 ? (
+                                <div className="p-8 flex flex-col items-center justify-center text-zinc-500 gap-2">
+                                  {viewingArchived ? <Archive size={24} className="opacity-20" /> : <Bell size={24} className="opacity-20" />}
+                                  <span className="text-xs text-center">
+                                    {viewingArchived ? 'No archived notifications' : 'No new notifications'}
+                                  </span>
+                                </div>
+                            ) : (
+                                (viewingArchived ? archivedNotifications : notifications).map(notification => (
                                     <div 
                                       key={notification.id}
                                       onClick={() => handleNotificationClick(notification)}
-                                      className="p-3 border-b border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors cursor-pointer last:border-0"
+                                      className="p-3 border-b border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors cursor-pointer last:border-0 group"
                                     >
                                         <div className="flex items-center gap-2 mb-1">
-                                           {!notification.read && <div className="w-1.5 h-1.5 bg-blue-500 rounded-full shrink-0"></div>}
-                                           <p className={`text-xs font-medium ${notification.read ? 'text-zinc-600 dark:text-zinc-400' : 'text-zinc-900 dark:text-white'}`}>
+                                           {!notification.read && !viewingArchived && <div className="w-1.5 h-1.5 bg-blue-500 rounded-full shrink-0"></div>}
+                                           <p className={`text-xs font-medium flex-1 ${notification.read ? 'text-zinc-600 dark:text-zinc-400' : 'text-zinc-900 dark:text-white'}`}>
                                              {notification.title}
                                            </p>
+                                           {viewingArchived && <span className="text-[10px] text-zinc-400">Archived</span>}
                                         </div>
                                         <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-2">{notification.message}</p>
                                         <p className="text-[10px] text-zinc-400 mt-1.5">{notification.time}</p>
