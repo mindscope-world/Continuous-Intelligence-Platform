@@ -63,3 +63,13 @@ export interface Insight {
   metric: string;
   impact: string;
 }
+
+export interface NotificationItem {
+  id: string;
+  title: string;
+  message: string;
+  time: string;
+  read: boolean;
+  type: 'info' | 'success' | 'warning' | 'error';
+  details?: string;
+}
