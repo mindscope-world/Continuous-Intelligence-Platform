@@ -9,7 +9,9 @@ import {
   Link2Off,
   Search,
   Settings2,
-  ShieldCheck
+  ShieldCheck,
+  X,
+  ExternalLink
 } from 'lucide-react';
 
 interface DataSource {
@@ -20,24 +22,124 @@ interface DataSource {
   lastSync: string;
   iconColor: string;
   description: string;
+  url?: string;
 }
 
 const INITIAL_SOURCES: DataSource[] = [
-  { id: '1', name: 'Salesforce', category: 'CRM', status: 'Connected', lastSync: '2 mins ago', iconColor: 'bg-blue-500', description: 'Pipeline, Opportunity, and Customer data.' },
-  { id: '2', name: 'HubSpot', category: 'Marketing', status: 'Connected', lastSync: '5 mins ago', iconColor: 'bg-orange-500', description: 'Marketing automation, email campaigns, and leads.' },
-  { id: '3', name: 'Google Ads', category: 'Advertising', status: 'Connected', lastSync: '1 hour ago', iconColor: 'bg-green-500', description: 'Ad spend, impressions, and conversion tracking.' },
-  { id: '4', name: 'LinkedIn Ads', category: 'Advertising', status: 'Disconnected', lastSync: 'Never', iconColor: 'bg-blue-700', description: 'B2B audience targeting and campaign performance.' },
-  { id: '5', name: 'Stripe', category: 'Finance', status: 'Connected', lastSync: '10 mins ago', iconColor: 'bg-indigo-500', description: 'Real-time revenue, subscription, and churn metrics.' },
+  { id: '1', name: 'Salesforce', category: 'CRM', status: 'Connected', lastSync: '2 mins ago', iconColor: 'bg-blue-500', description: 'Pipeline, Opportunity, and Customer data.', url: 'https://login.salesforce.com' },
+  { id: '2', name: 'HubSpot', category: 'Marketing', status: 'Connected', lastSync: '5 mins ago', iconColor: 'bg-orange-500', description: 'Marketing automation, email campaigns, and leads.', url: 'https://app.hubspot.com' },
+  { id: '3', name: 'Google Ads', category: 'Advertising', status: 'Connected', lastSync: '1 hour ago', iconColor: 'bg-green-500', description: 'Ad spend, impressions, and conversion tracking.', url: 'https://ads.google.com' },
+  { id: '4', name: 'LinkedIn Ads', category: 'Advertising', status: 'Disconnected', lastSync: 'Never', iconColor: 'bg-blue-700', description: 'B2B audience targeting and campaign performance.', url: 'https://www.linkedin.com/campaignmanager' },
+  { id: '5', name: 'Stripe', category: 'Finance', status: 'Connected', lastSync: '10 mins ago', iconColor: 'bg-indigo-500', description: 'Real-time revenue, subscription, and churn metrics.', url: 'https://dashboard.stripe.com' },
   { id: '6', name: 'Slack', category: 'Communication', status: 'Connected', lastSync: 'Real-time', iconColor: 'bg-purple-500', description: 'Team notifications and alert distribution.' },
   { id: '7', name: 'Zendesk', category: 'CRM', status: 'Disconnected', lastSync: 'Never', iconColor: 'bg-emerald-500', description: 'Customer support tickets and satisfaction scores.' },
   { id: '8', name: 'Mixpanel', category: 'Marketing', status: 'Error', lastSync: '2 days ago', iconColor: 'bg-violet-500', description: 'Product usage analytics and user behavior.' },
 ];
+
+interface NewDataSourceModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onAdd: (name: string, category: string, description: string, url: string) => void;
+}
+
+const NewDataSourceModal: React.FC<NewDataSourceModalProps> = ({ isOpen, onClose, onAdd }) => {
+  const [name, setName] = useState('');
+  const [category, setCategory] = useState('CRM');
+  const [description, setDescription] = useState('');
+  const [url, setUrl] = useState('');
+
+  if (!isOpen) return null;
+
+  const handleSubmit = () => {
+    if (name && category) {
+      onAdd(name, category, description, url);
+      setName('');
+      setCategory('CRM');
+      setDescription('');
+      setUrl('');
+      onClose();
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+      <div className="w-full max-w-md bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+        <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex justify-between items-center bg-zinc-50/50 dark:bg-[#18181b]">
+          <h3 className="font-bold text-zinc-900 dark:text-white">Add Custom Source</h3>
+          <button onClick={onClose} className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">
+            <X size={20} />
+          </button>
+        </div>
+        <div className="p-6 space-y-4 bg-white dark:bg-[#18181b]">
+          <div>
+            <label className="block text-xs font-medium text-zinc-500 mb-1">Source Name</label>
+            <input 
+              type="text" 
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full bg-zinc-50 dark:bg-[#09090b] border border-zinc-200 dark:border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-blue-500 placeholder-zinc-400"
+              placeholder="e.g. Custom API"
+              autoFocus
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-zinc-500 mb-1">Connection URL (Optional)</label>
+            <div className="relative">
+                <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 w-4 h-4" />
+                <input 
+                  type="url" 
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  className="w-full bg-zinc-50 dark:bg-[#09090b] border border-zinc-200 dark:border-zinc-800 rounded-lg pl-9 pr-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-blue-500 placeholder-zinc-400"
+                  placeholder="https://api.mysource.com"
+                />
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-zinc-500 mb-1">Category</label>
+            <select 
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full bg-zinc-50 dark:bg-[#09090b] border border-zinc-200 dark:border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-blue-500"
+            >
+              <option value="CRM">CRM</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Advertising">Advertising</option>
+              <option value="Finance">Finance</option>
+              <option value="Communication">Communication</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-zinc-500 mb-1">Description</label>
+            <textarea 
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full bg-zinc-50 dark:bg-[#09090b] border border-zinc-200 dark:border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-blue-500 h-24 resize-none placeholder-zinc-400"
+              placeholder="Brief description of data points..."
+            />
+          </div>
+        </div>
+        <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 flex justify-end gap-2 bg-zinc-50/50 dark:bg-[#18181b]">
+          <button onClick={onClose} className="px-4 py-2 text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">Cancel</button>
+          <button 
+            onClick={handleSubmit} 
+            disabled={!name.trim()}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Add Source
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const DataSourcesView: React.FC = () => {
   const [sources, setSources] = useState<DataSource[]>(INITIAL_SOURCES);
   const [isSyncing, setIsSyncing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<'All' | 'Connected' | 'Disconnected'>('All');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const handleToggleConnection = (id: string) => {
     setSources(prev => prev.map(source => {
@@ -62,6 +164,32 @@ const DataSourcesView: React.FC = () => {
     }, 2000);
   };
 
+  const handleAddSource = (name: string, category: string, description: string, url: string) => {
+    const getCategoryColor = (cat: string) => {
+      switch(cat) {
+        case 'CRM': return 'bg-blue-500';
+        case 'Marketing': return 'bg-orange-500';
+        case 'Advertising': return 'bg-green-500';
+        case 'Finance': return 'bg-indigo-500';
+        case 'Communication': return 'bg-purple-500';
+        default: return 'bg-zinc-500';
+      }
+    };
+
+    const newSource: DataSource = {
+      id: Date.now().toString(),
+      name,
+      category: category as any,
+      status: 'Connected',
+      lastSync: 'Just now',
+      iconColor: getCategoryColor(category),
+      description,
+      url: url || undefined
+    };
+
+    setSources(prev => [...prev, newSource]);
+  };
+
   const filteredSources = sources.filter(s => {
     const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           s.category.toLowerCase().includes(searchQuery.toLowerCase());
@@ -75,6 +203,12 @@ const DataSourcesView: React.FC = () => {
 
   return (
     <main className="flex-1 p-8 overflow-y-auto animate-in fade-in duration-300">
+      <NewDataSourceModal 
+        isOpen={isAddModalOpen} 
+        onClose={() => setIsAddModalOpen(false)} 
+        onAdd={handleAddSource} 
+      />
+
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2 flex items-center gap-2">
@@ -85,7 +219,10 @@ const DataSourcesView: React.FC = () => {
           </p>
         </div>
         <div className="flex gap-3">
-             <button className="px-4 py-2 bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+             <button 
+                onClick={() => setIsAddModalOpen(true)}
+                className="px-4 py-2 bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+             >
                 <Plus size={16} /> Add Custom Source
              </button>
              <button 
@@ -158,7 +295,21 @@ const DataSourcesView: React.FC = () => {
               </div>
 
               <div className="mb-4 flex-1">
-                 <h3 className="text-zinc-900 dark:text-white font-bold text-lg mb-1">{source.name}</h3>
+                 <div className="flex items-center gap-2 mb-1">
+                    <h3 className="text-zinc-900 dark:text-white font-bold text-lg truncate" title={source.name}>{source.name}</h3>
+                    {source.url && (
+                        <a 
+                            href={source.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-zinc-400 hover:text-blue-500 transition-colors p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded"
+                            title="Open Data Source"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <ExternalLink size={14} />
+                        </a>
+                    )}
+                 </div>
                  <p className="text-xs text-zinc-500 mb-2">{source.category}</p>
                  <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed min-h-[40px]">{source.description}</p>
               </div>
@@ -186,7 +337,10 @@ const DataSourcesView: React.FC = () => {
         ))}
         
         {/* Add New Placeholder */}
-        <button className="border border-dashed border-zinc-300 dark:border-zinc-800 rounded-xl p-5 flex flex-col items-center justify-center gap-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 hover:border-zinc-400 dark:hover:border-zinc-700 transition-all group min-h-[240px]">
+        <button 
+            onClick={() => setIsAddModalOpen(true)}
+            className="border border-dashed border-zinc-300 dark:border-zinc-800 rounded-xl p-5 flex flex-col items-center justify-center gap-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 hover:border-zinc-400 dark:hover:border-zinc-700 transition-all group min-h-[240px]"
+        >
            <div className="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center group-hover:scale-110 transition-transform">
               <Plus size={24} className="text-zinc-400 dark:text-zinc-600 group-hover:text-zinc-600 dark:group-hover:text-zinc-400" />
            </div>
